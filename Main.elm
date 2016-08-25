@@ -9,22 +9,32 @@ main =  App.beginnerProgram {
     update = update }
 
 init : Model
-init = { notes = [] , input_note = "" } 
+init = { notes = [] , input_note = "" }
 
 type Msg = AddNote | ChangeInputNote String
 
-type alias Model = { notes : List String, input_note : String } 
+type alias Title = String
+type alias Content = String
+
+type Note = Note Title Content
+
+type alias Model = { notes : List Note, input_note : String }
 
 update : Msg -> Model -> Model
 update msg model =
   case msg of
-    AddNote           -> { model | notes = model.input_note :: model.notes, input_note = "" } 
+    AddNote           -> { model | notes = (Note model.input_note "some desc") :: model.notes, input_note = "" }
     ChangeInputNote a -> { model | input_note = a }
 
-view model = 
+view model =
   Html.div [] [
-     Html.ul [] (List.map (\x -> Html.li [] [Html.text x]) model.notes),
+     Html.ul []
+      (List.map (\note -> Html.li [] [renderNote note]) model.notes),
      Html.input [value model.input_note, onInput (\x -> ChangeInputNote x) ] [],
-     Html.button [ onClick AddNote ] [ Html.text "Add Note" ]  
+     Html.button [ onClick AddNote ] [ Html.text "Add Note" ]
   ]
 
+renderNote (Note title content) = Html.div [] [
+  Html.strong [] [Html.text title],
+  Html.p [] [Html.text content]
+ ]
