@@ -72,7 +72,7 @@ update msg model =
       let
         new_note = (Note (List.length model.notes) "" "")
       in
-        { model | notes = new_note :: model.notes, selected_note = Just new_note }
+        { model | notes = new_note :: model.notes, selected_note = Just new_note, content_input = "", title_input = "" }
     SelectNote id            ->
        let
          note = (getNoteById id model.notes)
